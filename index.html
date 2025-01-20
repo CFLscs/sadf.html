@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-image: url('http://pic.qqbizhi.com/allimg/202006/1700h6il9ktuovdq0y8_view.jpg'); /* 替换为你的浪漫背景图链接 */
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
             background-size: cover;
             background-position: center;
             display: flex;
@@ -17,7 +17,8 @@
             height: 100vh;
             margin: 0;
             color: #fff;
-            background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+            overflow: hidden;
+            position: relative;
         }
         h1 {
             font-size: 2.5em;
@@ -28,14 +29,14 @@
             font-size: 1.2em;
             margin-right: 10px;
         }
-        input[type="text"] {
+        input[type="text"], textarea {
             padding: 10px;
             font-size: 1.2em;
             border: 2px solid #fff;
             border-radius: 5px;
             background: transparent;
             color: #fff;
-            width: 300px;
+            margin: 5px 0;
         }
         button {
             padding: 10px 20px;
@@ -50,51 +51,112 @@
         button:hover {
             background: #e05e43;
         }
-        #result {
-            font-size: 1.5em;
-            margin-top: 30px;
+        .container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
             text-align: center;
-            animation: fadeIn 2s;
+            z-index: 1;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .active {
+            display: flex;
         }
-        /* 添加音频播放器的样式 */
-        audio {
-            width: 200px; /* 设置音频播放器的宽度 */
-            margin-top: 20px; /* 添加一些上边距 */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('http://pic.qqbizhi.com/allimg/202006/1700h6il9ktuovdq0y8_view.jpg') repeat;
+            opacity: 0.5;
+            animation: twinkle 10s infinite;
+            z-index: 0;
+        }
+    @keyframes twinkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+        .heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            color: #ff6347;
+            animation: floatHeart 5s infinite;
+            z-index: 0;
+        }
+        @keyframes floatHeart {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -100px) scale(1.2); }
         }
     </style>
 </head>
 <body>
-    <h1>Confess Your Love</h1>
-    <p id="result"></p>
-    <label for="name">请输入你的名字：</label>
-    <input type="text" id="name">
-    <button onclick="confess(document.getElementById('name').value)">秘密按键</button>
-    <audio controls autoplay loop>
-        <source src="https://lv-sycdn.kuwo.cn/b642c937721458e86e8832e223ed372e/678d0031/resource/30106/trackmedia/M500002I8dhW05PgTU.mp3" type="audio/mpeg">
+    <div class="stars"></div>
+    <div class="container welcome active">
+        <h1>Confess Your Love</h1>
+        <p>在这里，你可以向心爱的人表白！</p >
+        <button onclick="showConfessForm()">开始表白</button>
+    </div>
+    <div class="container confess">
+        <h1>请输入表白内容</h1>
+        <label for="name">对方的名字：</label>
+        <input type="text" id="name" placeholder="名字">
+        <label for="message">表白内容：</label>
+        <textarea id="message" rows="4" placeholder="表白内容"></textarea>
+        <button onclick="confess()">发送表白</button>
+    </div>
+    <div class="container result">
+        <h1 id="result"></h1>
+        <div class="response" id="response">
+            <button onclick="accept()">接受</button>
+            <button onclick="reject()">拒绝</button>
+        </div>
+    </div>
+    <div class="container feedback">
+        <h1 id="feedback"></h1>
+        <button onclick="restart()">重新开始</button>
+    </div>
+    <div class="heart">❤</div>
+    <audio autoplay loop>
+        <source src="https://lv-sycdn.kuwo.cn/b642c937721458e86e8832e223ed372e/678d0031/resource/30106/trackmedia/M500002I8dhW05PgTU.mp3" type="audio/mpeg"> <!-- 替换为你的舒缓音乐链接 -->
         Your browser does not support the audio element.
     </audio>
     <script>
-        function confess(name) {
-            if (name.trim() === '') {
-                alert('请输入一个名字哦！');
+        function showConfessForm() {
+            document.querySelector('.welcome').classList.remove('active');
+            document.querySelector('.confess').classList.add('active');
+        }
+function confess() {
+            const name = document.getElementById('name').value.trim();
+            const message = document.getElementById('message').value.trim();
+            if (!name || !message) {
+                alert('请输入名字和表白内容！');
                 return;
             }
-            const messages = [
-                `亲爱的${name}，我喜欢你，你愿意和我在一起吗？`,
-                `嘿，${name}，我想告诉你，你在我心里很重要，我喜欢你！`,
-                `宝贝${name}，你是我心中的光，我喜欢你，希望你能接受我的喜欢！`,
-                `亲爱的${name}，每次看到你，我的心里都充满了幸福，我喜欢你！`
-            ];
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            document.getElementById("result").innerText = randomMessage;
-            document.getElementById("result").style.opacity = 0;
-            setTimeout(() => {
-                document.getElementById("result").style.opacity = 1;
-            }, 100);
+            document.querySelector('.confess').classList.remove('active');
+            document.querySelector('.result').classList.add('active');
+            document.getElementById("result").innerText = `亲爱的${name}，${message}`;
+        }
+
+        function accept() {
+            document.querySelector('.result').classList.remove('active');
+            document.querySelector('.feedback').classList.add('active');
+            document.getElementById("feedback").innerText = "表白成功！🎉";
+        }
+
+        function reject() {
+            document.querySelector('.result').classList.remove('active');
+            document.querySelector('.feedback').classList.add('active');
+            document.getElementById("feedback").innerText = "表白失败... 😢";
+        }
+
+        function restart() {
+            document.querySelector('.feedback').classList.remove('active');
+            document.querySelector('.welcome').classList.add('active');
+            document.getElementById('name').value = '';
+            document.getElementById('message').value = '';
         }
     </script>
 </body>
