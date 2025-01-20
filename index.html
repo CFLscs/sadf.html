@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confess Your Love</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('http://pic.qqbizhi.com/allimg/202006/1700h6il9ktuovdq0y8_view.jpg'); /* 替换为你的浪漫背景图链接 */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px #000000;
+        }
+        label {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1.2em;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            background: transparent;
+            color: #fff;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            background: #ff6347;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #e05e43;
+        }
+        #result {
+            font-size: 1.5em;
+            margin-top: 30px;
+            text-align: center;
+            animation: fadeIn 2s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* 添加音频播放器的样式 */
+        audio {
+            width: 200px; /* 设置音频播放器的宽度 */
+            margin-top: 20px; /* 添加一些上边距 */
+        }
+    </style>
+</head>
+<body>
+    <h1>Confess Your Love</h1>
+    <p id="result"></p>
+    <label for="name">请输入你的名字：</label>
+    <input type="text" id="name">
+    <button onclick="confess(document.getElementById('name').value)">秘密按键</button>
+    <audio controls autoplay loop>
+        <source src="https://lv-sycdn.kuwo.cn/b642c937721458e86e8832e223ed372e/678d0031/resource/30106/trackmedia/M500002I8dhW05PgTU.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <script>
+        function confess(name) {
+            if (name.trim() === '') {
+                alert('请输入一个名字哦！');
+                return;
+            }
+            const messages = [
+                `亲爱的${name}，我喜欢你，你愿意和我在一起吗？`,
+                `嘿，${name}，我想告诉你，你在我心里很重要，我喜欢你！`,
+                `宝贝${name}，你是我心中的光，我喜欢你，希望你能接受我的喜欢！`,
+                `亲爱的${name}，每次看到你，我的心里都充满了幸福，我喜欢你！`
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById("result").innerText = randomMessage;
+            document.getElementById("result").style.opacity = 0;
+            setTimeout(() => {
+                document.getElementById("result").style.opacity = 1;
+            }, 100);
+        }
+    </script>
+</body>
+</html>
